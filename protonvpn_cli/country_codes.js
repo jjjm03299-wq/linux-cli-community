@@ -1,4 +1,7 @@
-country_codes = {
+/**
+ * Country codes mapping dictionary for ProtonVPN CLI.
+ */
+const countryCodes = {
     "BD": "Bangladesh",
     "BE": "Belgium",
     "BF": "Burkina Faso",
@@ -18,7 +21,7 @@ country_codes = {
     "BV": "Bouvet Island",
     "BW": "Botswana",
     "WS": "Samoa",
-    "BQ": "Bonaire, Saint Eustatius and Saba ",
+    "BQ": "Bonaire, Saint Eustatius and Saba",
     "BR": "Brazil",
     "BS": "Bahamas",
     "JE": "Jersey",
@@ -249,4 +252,8 @@ country_codes = {
     "UA": "Ukraine",
     "QA": "Qatar",
     "MZ": "Mozambique"
-}
+};
+
+module.exports = {
+    countryCodes
+};
