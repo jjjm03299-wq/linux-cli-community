@@ -1,3 +1,5 @@
-from . import cli
+#!/usr/bin/env node
 
-cli.main()
+const cli = require('./cli');
+
+cli.main();
