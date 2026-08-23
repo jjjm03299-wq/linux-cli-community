@@ -339,25 +339,10 @@ function changeFileOwner(filePath) {
 }
 
 /**
- * Check if the program was executed as root and prompt the user.
+ * Check if the program was executed as root (bypassed for Termux).
  */
 function checkRoot() {
-    if (process.getuid && process.getuid() !== 0) {
-        console.log("[!] The program was not executed as root.\n[!] Please run as root.");
-        logger.debug("Program wasn't executed as root");
-        process.exit(1);
-    } else {
-        const dependencies = ["openvpn", "ip", "sysctl", "pgrep", "pkill"];
-        for (const program of dependencies) {
-            try {
-                subprocess.execSync(`which ${program}`, { stdio: 'ignore' });
-            } catch (e) {
-                logger.debug(`${program} not found`);
-                console.log(`'${program}' not found.\nPlease install ${program}.`);
-                process.exit(1);
-            }
-        }
-    }
+    logger.debug("Bypassing root check for Termux environment");
 }
 
 /**
