@@ -1,19 +1,32 @@
 // Standard Libraries & Configuration Imports
 const os = require('os');
-const sys = require('sys'); // Note: In Node.js, process is typically used instead of sys for exiting/args
-const configparser = require('ini'); // npm package 'ini' is commonly used for .ini parsing in Node.js
-const time = require('time'); // Or standard Date operations
+const configparser = require('ini');
+const time = {
+    localtime(timestamp, callback) {
+        const date = timestamp ? new Date(timestamp * 1000) : new Date();
+        const tm = {
+            tm_sec: date.getSeconds(),
+            tm_min: date.getMinutes(),
+            tm_hour: date.getHours(),
+            tm_mday: date.getDate(),
+            tm_mon: date.getMonth(),
+            tm_year: date.getFullYear() - 1900,
+            tm_isdst: 0
+        };
+        if (typeof callback === 'function') {
+            callback(tm);
+        }
+        return tm;
+    }
+};
 const fs = require('fs');
 const path = require('path');
 const subprocess = require('child_process');
-const re = require('regex');
-const random = require('random');
-const ipaddress = require('ipaddr.js');
-const math = require('mathjs');
 
 // External Libraries
 const axios = require('axios');
-const { Environment, FileSystemLoader } = require('nunjucks'); // Equivalent to Jinja2 in Node.js
+const { Environment, FileSystemLoader } = require('nunjucks');
+const distro = require('linux-distro');
 
 // ProtonVPN-CLI functions & constants
 const { logger } = require('./logger');
@@ -26,7 +39,6 @@ const {
     OVPN_FILE,
     CLIENT_SUFFIX
 } = require('./constants');
-const distro = require('linux-distro'); // Or custom implementation for Linux distribution
 
 /**
  * Call to the ProtonVPN API.
@@ -250,7 +262,7 @@ function cidrToNetmask(cidr) {
 }
 
 /**
- * Render a Nunjucks (Jinja2 equivalent) template
+ * Render a Nunjucks template
  */
 function renderJ2Template(templateFile, destinationFile, values) {
     const env = new Environment(new FileSystemLoader(path.join(__dirname, "templates")));
@@ -499,4 +511,31 @@ function patchPassfile(passfile) {
         fs.writeFileSync(passfile, `${ovpnUsername.trim()}+${CLIENT_SUFFIX}\n${ovpnPassword}`);
         fs.chmodSync(passfile, 0o600);
     }
-        }
+}
+
+module.exports = {
+    time,
+    callApi,
+    pullServerData,
+    getServers,
+    getServerValue,
+    getConfigValue,
+    setConfigValue,
+    getIpInfo,
+    getCountryName,
+    getFastestServer,
+    getDefaultNic,
+    isConnected,
+    isIpv6Disabled,
+    waitForNetwork,
+    cidrToNetmask,
+    renderJ2Template,
+    createOpenvpnConfig,
+    changeFileOwner,
+    checkRoot,
+    checkUpdate,
+    checkInit,
+    isValidIp,
+    getTransferredData,
+    patchPassfile
+};
